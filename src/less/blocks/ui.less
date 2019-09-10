@@ -9,7 +9,6 @@
 }
 
 
-
 .ui__block {
   display: flex;
   align-items: flex-start;
@@ -54,7 +53,7 @@
   display: flex;
   flex-direction: column;
 
-  width: 10em;
+  width: 11em;
   min-height: 5em;
 
   margin: 0;
@@ -95,6 +94,34 @@
   background-color: @blue-hover;
 }
 
+
+.ui__color-item-section--light-blue {
+  background-color: @light-blue;
+}
+
+.ui__color-item-section--light-blue-hover {
+  background-color: @light-blue-hover;
+}
+
+
+.ui__color-item-section--dark-blue {
+  background-color: @dark-blue;
+}
+
+.ui__color-item-section--dark-blue-hover {
+  background-color: @dark-blue-hover;
+}
+
+
+.ui__color-item-section--link-blue {
+  background-color: @link-blue;
+}
+
+.ui__color-item-section--link-blue-hover {
+  background-color: @link-blue-hover;
+}
+
+
 .ui__color-item-section--orange {
   background-color: @orange;
 }
@@ -102,7 +129,6 @@
 .ui__color-item-section--orange-hover {
   background-color: @orange-hover;
 }
-
 
 
 .ui__color-item-txt {
@@ -236,4 +262,47 @@
   background-size: 80%;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+
+/*--- Таблицы на CSS ---*/
+
+.ui__table {
+  display: table;
+
+  width: 700px;
+  min-height: 30px;
+
+  margin: 0;
+  padding: 0;
+  padding-top: 10px;
+
+  background-color: #51a4ff;
+
+}
+
+.ui__row {
+  display: table-row;
+
+  width: 100%;
+  height: 30px;
+
+  margin: 0;
+  padding: 0;
+
+  background-color: #cdffc5;
+  border: 2px solid #FF0000;
+}
+
+.ui__row--height {
+  height: 70px;
+}
+
+.ui__cell {
+  display: table-cell;
+
+  background-color: #fff9c2;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #000;
 }
