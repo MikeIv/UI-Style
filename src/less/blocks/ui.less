@@ -130,6 +130,14 @@
   background-color: @orange-hover;
 }
 
+.ui__color-item-section--orange-dark {
+  background-color: @orange-dark;
+}
+
+.ui__color-item-section--orange-dark-hover {
+  background-color: @orange-dark-hover;
+}
+
 
 .ui__color-item-txt {
   width: 100%;
@@ -154,6 +162,10 @@
 
 .ui__color-item-txt--light {
   color: @white;
+}
+
+.ui__color-item-txt--mb {
+  margin-bottom: 0;
 }
 
 .ui__icon-list {
@@ -279,7 +291,7 @@
   margin-right: 10px;
   padding: 0;
 
-  border: 1px solid #51a4ff;
+  border: 1px solid #999999;
   border-radius: 0;
 }
 
@@ -295,6 +307,66 @@
   background-repeat: no-repeat;
   background-color: #333333;
   border: none;
+}
+
+
+/*--- Checkbox MK components v1 ---*/
+
+.ui__check-label-mk {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.ui__check-input-mk {
+  display: none;
+}
+
+
+.ui__check-txt-mk {
+  position: relative;
+
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+  padding-left: 30px;
+
+}
+
+.ui__check-txt-mk::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+  margin-right: 10px;
+  padding: 0;
+
+  border: 1px solid #999999;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #DADADA 100%);
+
+  box-sizing: border-box;
+}
+
+.ui__check-label-mk input:checked + .ui__check-txt-mk::before {
+  content: "";
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cstyle%3E.check-mk-a%7Bfill:%23444;%7D%3C/style%3E%3C/defs%3E%3Ctitle%3Eicon-check-mk%3C/title%3E%3Cpath class='check-mk-a' d='M4.51,5.37,9.73,0,12,2.28,4.51,10,0,5.37,2.29,3.05Z'/%3E%3C/svg%3E");
+  background-size: 80%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 
@@ -431,4 +503,24 @@
   font-size: 0.85em;
   font-weight: bold;
   color: #FFFFFF;
+}
+
+/* --- разделитель --- */
+.ui__separation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 1;
+
+  margin: 0;
+  margin-right: 15px;
+  padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  background-color: #51a4ff;
+}
+
+.ui__separation--height {
+  height: 70px;
 }
