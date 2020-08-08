@@ -149,4 +149,4 @@ gulp.task("server", function () {
     gulp.watch("src/js/*.js").on("change", server.reload);
 });
 
-gulp.task("start", gulp.series("build", "server"));
+gulp.task("default", gulp.series("build", "server"));
