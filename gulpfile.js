@@ -1,152 +1,177 @@
 "use strict";
 
-const gulp = require("gulp");
-const less = require("gulp-less");
-const minify = require("gulp-csso");
-const imagemin = require("gulp-imagemin");
-const svgmin = require('gulp-svgmin');
-const svgstore = require("gulp-svgstore");
-const plumber = require("gulp-plumber");
+const gulp = require("gulp"); // Подключаем Gulp
+const less = require("gulp-less"); // Подключаем Less пакет
+const htmlmin = require('gulp-htmlmin'); //html минификатор
+const fileinclude = require("gulp-file-include"); // Сборка шаблонов html
+const minifycss = require("gulp-csso"); // CSS минификатор
+const sourcemaps = require('gulp-sourcemaps'); // Карта css
+const plumber = require("gulp-plumber"); // Исключение прерывания выполнения задач при ошибке
 const postcss = require("gulp-postcss");
-const posthtml = require("gulp-posthtml");
-const rename = require("gulp-rename");
-const autoprefixer = require("autoprefixer");
-const server = require("browser-sync").create();
-const del = require("del");
+const autoprefixer = require("autoprefixer"); // Подключаем библиотеку для автопрефиксов
+const mqpacker = require("css-mqpacker"); // Pack same CSS media query rules into one using PostCSS
+const sortCSSmq = require('sort-css-media-queries'); // Sort your media-queries to the mobile-first methodology
+const rename = require("gulp-rename"); // Подключаем библиотеку для переименования файлов
 
-const sourcemaps = require('gulp-sourcemaps');
-const mqpacker = require("css-mqpacker");
-const sortCSSmq = require('sort-css-media-queries');
+const babel = require("gulp-babel"); // JS
+const uglify = require('gulp-uglify'); // JS сборщик
+const terser = require('gulp-terser'); // compressed es6+ code
+
+const sync = require("browser-sync").create(); // Подключаем Browser Sync
+const del = require("del"); // Подключаем библиотеку для удаления файлов и папок
 
 
-gulp.task("clean", function () {
+// Clean
+const clean = () => {
     return del("build");
-});
+};
+exports.clean = clean;
 
 
-gulp.task('svg-clean', function () {
-    return gulp.src('src/img/*' +
-        '.svg')
-        .pipe(svgmin({
-            plugins: [{
-                removeViewBox: false
-            }, {
-                cleanupNumericValues: {
-                    floatPrecision: 2
-                }
-            },
-                {
-                    convertColors: {
-                        names2hex: false,
-                        rgb2hex: false
-                    }
-                }, {
-                    removeDimensions: false
-                }]
-        }))
-        .pipe(svgmin({
-            js2svg: {
-                pretty: true
-            }
-        }))
-        .pipe(gulp.dest('src/img'));
-});
 
 
-gulp.task("copy", function () {
+// HTML
+const html = () => {
+    gulp.src("src/index.html")
+      .pipe(htmlmin({
+          removeComments: true,
+          collapseWhitespace: true
+      }))
+      .pipe(gulp.dest("build/"))
+      .pipe(sync.reload({stream: true}));
+};
+exports.html = html;
+
+
+const fileincludehtml = () => {
+    return gulp.src("src/*_build.html")
+      .pipe(fileinclude({
+          prefix: "@@",
+          basepath: "@file"
+      }))
+      .pipe(rename(function (path) {
+          path.basename = path.basename.replace("_build", "");
+      }))
+      .pipe(gulp.dest("src/"))
+      .pipe(sync.reload({stream: true}));
+
+};
+exports.fileincludehtml = fileincludehtml;
+
+
+
+
+//CSS
+const css = () => {
+    return gulp.src("src/less/style.less")
+      .pipe(sourcemaps.init())
+      .pipe(plumber())
+      .pipe(less())
+      .pipe(postcss([
+          autoprefixer({}),
+          mqpacker({
+              sort: sortCSSmq
+          })
+      ]))
+      .pipe(gulp.dest("src/css"))
+      .pipe(gulp.dest("build/css"))
+      .pipe(minifycss())
+      .pipe(sourcemaps.write('.'))
+
+      .pipe(rename("style.min.css"))
+      .pipe(gulp.dest("build/css"))
+      .pipe(sync.reload({stream: true}));
+};
+exports.css = css;
+
+
+// JS
+const scripts = () => {
+    return gulp.src('src/js/*.js')
+      .pipe(babel({
+          presets: ['@babel/env']
+      }))
+      .pipe(terser())
+      .pipe(uglify())
+      .pipe(gulp.dest('build/js'))
+      .pipe(sync.stream());
+};
+exports.scripts = scripts;
+
+
+// Вариант подключения Vue в gulp
+/*gulp.task('js', function() {
+  return browserify({ entries: 'src/js/main.js'})
+    .transform(babelify, { presets: ['es2015'] })
+    .transform(vueify)
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(gulp.dest('public/js'))
+    .pipe(connect.reload());
+});*/
+
+
+
+// Copy
+const copy = () => {
     return gulp.src([
         "src/fonts/**/*.{woff,woff2}",
         "src/img/**",
         "src/js/**",
-        "src/*.html"
+        "src/page-*.html",
+        "src/index.html"
     ], {
         base: "src"
     })
-        .pipe(gulp.dest("build"));
-});
+      .pipe(gulp.dest("build"));
+};
+exports.copy = copy;
 
 
-gulp.task("css", function () {
-    return gulp.src("src/less/style.less")
-        .pipe(sourcemaps.init())
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(postcss([
-            autoprefixer({
-                browsers: [
-                    "last 1 version",
-                    "last 2 Chrome versions",
-                    "last 2 Firefox versions",
-                    "last 2 Opera versions",
-                    "last 2 Edge versions",
-                    "IE 11"
-                ]
-            }),
-            mqpacker({
-                sort: sortCSSmq
-            })
-        ]))
-        .pipe(gulp.dest("src/css"))
-        .pipe(gulp.dest("build/css"))
-        .pipe(minify())
-        .pipe(sourcemaps.write('.'))
-        .pipe(rename("style.min.css"))
-        .pipe(gulp.dest("build/css"))
-        .pipe(server.stream());
-});
 
-
-gulp.task("images", function () {
-    return gulp.src("src/img/**/*.{png,jpg,svg}")
-        .pipe(imagemin([
-            imagemin.optipng({optimizationLevel: 3}),
-            imagemin.jpegtran({progressive: true}),
-            imagemin.svgo()
-        ]))
-        .pipe(gulp.dest("build/img"));
-});
-
-gulp.task("sprite", function () {
-    return gulp.src("src/img/sprite/*.svg")
-        .pipe(svgstore({
-            inlineSvg: true
-        }))
-        .pipe(rename("sprite.svg"))
-        .pipe(gulp.dest("build/img"));
-});
-
-
-gulp.task("html", function () {
-    gulp.src("src/**/*.html")
-        .pipe(posthtml([
-            include()
-        ]))
-        .pipe(gulp.dest("build"))
-        .pipe(server.stream());
-});
-
-
-gulp.task("build", gulp.series(
-    "clean",
-    "copy",
-    "css",
-    "sprite",
-    "images",
-));
-
-gulp.task("server", function () {
-    server.init({
+// Server
+const server = () => {
+    sync.init({
         server: "build/",
         notify: false,
         open: true,
         cors: true,
         ui: false
     });
+};
+exports.server = server;
 
-    gulp.watch("src/less/**/*.less", gulp.series("css")).on("change", server.reload);
-    gulp.watch("src/img/*.svg", gulp.series("sprite"));
-    gulp.watch("src/*.html", gulp.series("build")).on("change", server.reload);
-    gulp.watch("src/js/*.js").on("change", server.reload);
-});
 
-gulp.task("default", gulp.series("build", "server"));
+// Watch
+const watch = () => {
+    gulp.watch("src/less/**/*.less", gulp.series(css)).on("change", sync.reload);
+    gulp.watch("src/*_build.html", gulp.series(fileincludehtml));
+    // gulp.watch("src/page-*.html", gulp.series(fileincludehtml));
+
+    gulp.watch("src/*.html", gulp.series(html)).on("change", sync.reload);
+
+    gulp.watch('src/js/**/*.js', gulp.series(scripts));
+    gulp.watch([
+        'src/fonts/**/*',
+        'src/img/**/*',
+        'src/*.html',
+    ], gulp.series(copy));
+};
+exports.watch = watch;
+
+
+// Default
+
+exports.default = gulp.series(
+  gulp.parallel(
+    clean,
+
+  ),
+
+  css,
+  copy,
+  gulp.parallel(
+    watch,
+    server,
+  ),
+);

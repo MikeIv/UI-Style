@@ -1,42 +1,27 @@
 {
-  "name": "Template2",
+  "name": "gulp-2020",
   "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
-  "dependencies": {
-    "del": "^3.0.0",
-    "express": "^4.16.4"
-  },
+  "private": true,
   "devDependencies": {
-    "browser-sync": "^2.26.3",
+    "@babel/core": "^7.13.15",
+    "@babel/preset-env": "^7.13.15",
+    "browser-sync": "^2.26.14",
     "css-mqpacker": "^7.0.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^6.0.0",
-    "gulp-csso": "^3.0.1",
-    "gulp-imagemin": "^5.0.3",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-file-include": "^2.2.2",
+    "gulp-htmlmin": "^5.0.1",
     "gulp-less": "^4.0.1",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
-    "gulp-posthtml": "^3.0.4",
-    "gulp-rename": "^1.4.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-svgmin": "^2.1.0",
-    "gulp-svgstore": "^7.0.1",
-    "posthtml-include": "^1.2.0",
-    "sort-css-media-queries": "^1.4.3"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MikeIv/Template2.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MikeIv/Template2/issues"
-  },
-  "homepage": "https://github.com/MikeIv/Template2#readme"
+    "gulp-posthtml": "^3.0.5",
+    "gulp-rename": "^2.0.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-terser": "^1.3.2",
+    "gulp-uglify": "^3.0.2",
+    "sort-css-media-queries": "^1.5.0"
+  }
 }
